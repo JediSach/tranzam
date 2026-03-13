@@ -1233,9 +1233,9 @@
             car.speed = 0;
           }
         }
-        // Out of fuel: lose power and slowly decelerate to a stop
+        // Out of fuel: lose power and slowly decelerate to a stop (rate at 1/4 of normal)
         if (!hasFuel && Math.abs(car.speed) > 0.005) {
-          car.speed *= Math.pow(0.985, rate);
+          car.speed *= Math.pow(0.985, rate * 0.25);
           if (Math.abs(car.speed) < 0.005) car.speed = 0;
         }
         // Overheat limp (only after 5 s above 135): decelerate to 3500 rpm in current gear (same gentle rate as out of fuel)
