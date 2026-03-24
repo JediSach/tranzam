@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Desert Drive</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -13,7 +12,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #000 url('nivaprint.png') center center / cover no-repeat fixed;
+      background: #1a1510;
       font-family: 'Segoe UI', system-ui, sans-serif;
       color: #e8dcc8;
     }
@@ -34,40 +33,6 @@
       align-items: stretch;
       gap: 0;
     }
-    .mobile-layout {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-    }
-    .touch-column {
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      align-items: center;
-      justify-content: center;
-    }
-    .touch-btn {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: 2px solid #8b7355;
-      background: rgba(26, 21, 16, 0.75);
-      color: #e8dcc8;
-      font-weight: 700;
-      font-size: 0.85rem;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .touch-btn.active {
-      background: rgba(93, 128, 43, 0.9);
-      border-color: #b9d67e;
-      color: #101008;
-    }
     #gaugeCanvas {
       display: block;
       border: 3px solid #8b7355;
@@ -84,219 +49,14 @@
       background: #c4a574;
       cursor: none;
     }
-    #gameOverlay {
-      display: none;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.75);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 10;
-    }
-    #gameOverlay.visible { display: flex; }
-    .game-wrap { position: relative; }
-    .overlay-panel {
-      background: #1a1510;
-      border: 3px solid #8b7355;
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      color: #e8dcc8;
-    }
-    #nameInputPanel input {
-      font-size: 2rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5rem;
-      width: 6rem;
-      text-align: center;
-      margin: 1rem 0;
-      padding: 0.5rem;
-      background: #2a2518;
-      border: 2px solid #8b7355;
-      color: #e8dcc8;
-    }
-    #nameInputPanel p { margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.9; }
-    #scoreDisplayPanel {
-      width: 100%;
-      box-sizing: border-box;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 24px;
-      line-height: 2;
-    }
-    #scoreDisplayPanel.flash {
-      animation: scoreFlash 0.6s ease-in-out infinite;
-    }
-    @keyframes scoreFlash {
-      0%, 100% { opacity: 1; color: #ffd600; }
-      50% { opacity: 0.7; color: #e8dcc8; }
-    }
-    #scoreLine { white-space: nowrap; }
-    #scoreDisplayPanel .score-dots { letter-spacing: 0.3em; color: #8b7355; }
-    #scoreDisplayPanel .score-line { margin: 0.25em 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5em; }
-    #scoreDisplayPanel .score-line .score-rank { min-width: 2ch; text-align: right; color: #8b7355; }
-    #scoreDisplayPanel .score-line .score-name { flex: 0 0 auto; }
-    #scoreDisplayPanel .score-line .score-dots { flex: 1 1 auto; min-width: 0; overflow: hidden; text-align: center; }
-    #scoreDisplayPanel .score-line .score-value { flex: 0 0 auto; text-align: right; }
-    #scoreDisplayPanel .score-separator { height: 2px; background: #8b7355; margin: 0.5em 0; }
-    #playAgainBtn {
-      margin-top: 1.5rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      background: #2d5016;
-      color: #e8dcc8;
-      border: 2px solid #8b7355;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #playAgainBtn:hover { background: #3d6020; }
-
-    #layoutChooser {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.86);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #layoutChooser.hidden { display: none; }
-    #mobileLockOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1900;
-      background: rgba(0, 0, 0, 0.86);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      text-align: center;
-    }
-    #mobileLockOverlay.visible { display: flex; }
-    #mobileLockOverlay .layout-panel p { margin-bottom: 0.75rem; }
-    .layout-panel {
-      background: #1a1510;
-      border: 3px solid #8b7355;
-      border-radius: 10px;
-      padding: 1.5rem;
-      min-width: min(92vw, 360px);
-      text-align: center;
-    }
-    .layout-panel h2 {
-      margin-bottom: 0.75rem;
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-    }
-    .layout-panel p {
-      font-size: 0.88rem;
-      opacity: 0.85;
-      margin-bottom: 1rem;
-    }
-    .layout-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-    }
-    .layout-btn {
-      min-width: 110px;
-      padding: 0.65rem 1rem;
-      font-size: 0.95rem;
-      border-radius: 6px;
-      border: 2px solid #8b7355;
-      background: #2a2518;
-      color: #e8dcc8;
-      cursor: pointer;
-    }
-    .layout-btn:hover { background: #3a3321; }
-
-    body.layout-mobile {
-      justify-content: flex-start;
-      padding: 0.25rem 0;
-      overflow: hidden;
-    }
-    body.layout-mobile h1 { display: none; }
-    body.layout-mobile .controls { display: none; }
-    body.layout-mobile .touch-column { display: flex; }
-    body.layout-mobile .mobile-layout {
-      width: 100vw;
-      max-width: 100vw;
-      justify-content: space-between;
-      gap: 0;
-      align-items: center;
-      padding: 0;
-      margin: 0;
-    }
-    body.layout-mobile .touch-left {
-      margin-left: 0;
-      transform: translateX(-4px);
-    }
-    body.layout-mobile .touch-right {
-      margin-right: 0;
-      transform: translateX(4px);
-    }
-    body.layout-mobile .game-wrap {
-      width: min(840px, calc(100vw - 152px));
-      max-height: calc(100vh - 8px);
-      flex: 0 1 auto;
-    }
-    body.layout-mobile #gaugeCanvas,
-    body.layout-mobile #gameCanvas {
-      height: auto;
-      max-height: calc(100vh - 8px);
-    }
-    body.layout-mobile #gaugeCanvas { width: 16.6667%; }
-    body.layout-mobile #gameCanvas { width: 83.3333%; }
-    body.layout-mobile .overlay-panel { padding: 1rem; }
-    body.layout-mobile #scoreDisplayPanel { font-size: 14px; line-height: 1.6; }
   </style>
 </head>
 <body>
-  <div id="layoutChooser">
-    <div class="layout-panel">
-      <h2>Choose Layout</h2>
-      <p>Select your control layout before starting the game.</p>
-      <div class="layout-actions">
-        <button type="button" class="layout-btn" id="layoutPcBtn">PC</button>
-        <button type="button" class="layout-btn" id="layoutMobileBtn">Mobile</button>
-      </div>
-    </div>
-  </div>
-  <div id="mobileLockOverlay">
-    <div class="layout-panel">
-      <h2>Mobile Play Locked</h2>
-      <p>Rotate to landscape and use fullscreen to play.</p>
-      <button type="button" class="layout-btn" id="mobileContinueBtn">Go Fullscreen</button>
-    </div>
-  </div>
   <h1>Desert Drive</h1>
   <p class="controls">Arrow keys or WASD: steer · Up/W: forward, Down/S: reverse (stop first) · Space: brake to stop</p>
-  <div class="mobile-layout">
-    <div class="touch-column touch-left">
-      <button type="button" class="touch-btn" id="touchLeft">LEFT</button>
-      <button type="button" class="touch-btn" id="touchRight">RIGHT</button>
-    </div>
-    <div class="game-wrap">
-      <canvas id="gaugeCanvas" width="140" height="700"></canvas>
-      <canvas id="gameCanvas" width="700" height="700"></canvas>
-      <div id="gameOverlay">
-        <div id="nameInputPanel" class="overlay-panel">
-          <p>Enter your name (2–3 letters)</p>
-          <input type="text" id="playerNameInput" maxlength="3" autocomplete="off" />
-          <p>Press Enter when done</p>
-        </div>
-        <div id="scoreDisplayPanel" class="overlay-panel" style="display:none;">
-          <div id="scoreListContainer"></div>
-          <button type="button" id="playAgainBtn">Play again</button>
-        </div>
-      </div>
-    </div>
-    <div class="touch-column touch-right">
-      <button type="button" class="touch-btn" id="touchUp">ACCEL</button>
-      <button type="button" class="touch-btn" id="touchDown">DECEL</button>
-    </div>
+  <div class="game-wrap">
+    <canvas id="gaugeCanvas" width="140" height="700"></canvas>
+    <canvas id="gameCanvas" width="700" height="700"></canvas>
   </div>
 
   <script>
@@ -305,56 +65,7 @@
       const gaugeCanvas = document.getElementById('gaugeCanvas');
       const ctx = gameCanvas.getContext('2d');
       const gaugeCtx = gaugeCanvas.getContext('2d');
-      const gameOverlay = document.getElementById('gameOverlay');
-      const nameInputPanel = document.getElementById('nameInputPanel');
-      const scoreDisplayPanel = document.getElementById('scoreDisplayPanel');
-      const playerNameInput = document.getElementById('playerNameInput');
-      const scoreListContainer = document.getElementById('scoreListContainer');
-      const playAgainBtn = document.getElementById('playAgainBtn');
-      const layoutChooser = document.getElementById('layoutChooser');
-      const layoutPcBtn = document.getElementById('layoutPcBtn');
-      const layoutMobileBtn = document.getElementById('layoutMobileBtn');
-      const mobileLockOverlay = document.getElementById('mobileLockOverlay');
-      const mobileContinueBtn = document.getElementById('mobileContinueBtn');
-      const touchLeftBtn = document.getElementById('touchLeft');
-      const touchRightBtn = document.getElementById('touchRight');
-      const touchUpBtn = document.getElementById('touchUp');
-      const touchDownBtn = document.getElementById('touchDown');
-      const SCORES_STORAGE_KEY = 'desertDriveScores';
-      function loadScores() {
-        try {
-          const raw = localStorage.getItem(SCORES_STORAGE_KEY);
-          return raw ? JSON.parse(raw) : [];
-        } catch (_) { return []; }
-      }
-      function saveScores(list) {
-        try { localStorage.setItem(SCORES_STORAGE_KEY, JSON.stringify(list)); } catch (_) {}
-      }
-      function formatScoreLine(rank, name, score) {
-        const dots = '.'.repeat(18);
-        return '<span class="score-rank">' + rank + '</span> <span class="score-name">' + name + '</span> <span class="score-dots">' + dots + '</span> <span class="score-value">' + score + '</span>';
-      }
-      function buildRankMap(scores) {
-        var withIndex = scores.map(function (s, i) { return { name: s.name, score: s.score, origIndex: i }; });
-        withIndex.sort(function (a, b) { return b.score - a.score || a.origIndex - b.origIndex; });
-        var rankByIndex = [];
-        for (var r = 0; r < withIndex.length; r++) rankByIndex[withIndex[r].origIndex] = r + 1;
-        return rankByIndex;
-      }
-      let nameInputAttached = false;
-      let scoreRestartAttached = false;
-      let wallStripePattern = null;
-      let layoutMode = null; // 'pc' | 'mobile'
       const GAME_SIZE = 700;
-
-      const mainCarImg = new Image();
-      mainCarImg.src = 'ladaniva96.png';
-      const chaseCarImg = new Image();
-      chaseCarImg.src = 'policecar112.png';
-      const hitchikerImg = new Image();
-      hitchikerImg.src = 'hitchiker.png';
-      const gaspumpImg = new Image();
-      gaspumpImg.src = 'gaspump.png';
 
       // Car state
       const car = {
@@ -437,6 +148,7 @@
         }
       }
 
+      let lastRefuelBeepTile = null; // "x,y" of tile we last beeped on
       function playRefuelBeep() {
         if (!audioCtx) initEngineSound();
         if (!audioCtx || audioCtx.state === 'suspended') return;
@@ -449,43 +161,6 @@
         osc.frequency.setValueAtTime(180, t);
         osc.frequency.linearRampToValueAtTime(1100, t + dur);
         osc.type = 'sine';
-        osc.connect(g);
-        g.connect(audioCtx.destination);
-        osc.start(t);
-        osc.stop(t + dur);
-      }
-
-      function playCollisionSound() {
-        if (!audioCtx) initEngineSound();
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        const t = audioCtx.currentTime;
-        const dur = 0.15;
-        const osc = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        g.gain.setValueAtTime(0.35, t);
-        g.gain.exponentialRampToValueAtTime(0.01, t + dur);
-        osc.frequency.setValueAtTime(120, t);
-        osc.frequency.exponentialRampToValueAtTime(60, t + dur);
-        osc.type = 'sawtooth';
-        osc.connect(g);
-        g.connect(audioCtx.destination);
-        osc.start(t);
-        osc.stop(t + dur);
-      }
-
-      function playWolfWhistle() {
-        if (!audioCtx) initEngineSound();
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        const t = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        const dur = 0.7;
-        g.gain.setValueAtTime(0.18, t);
-        g.gain.linearRampToValueAtTime(0.0, t + dur);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(700, t);
-        osc.frequency.linearRampToValueAtTime(1400, t + 0.3);
-        osc.frequency.linearRampToValueAtTime(900, t + dur);
         osc.connect(g);
         g.connect(audioCtx.destination);
         osc.start(t);
@@ -519,79 +194,12 @@
       let needReleaseBeforeReverse = false;
       let needReleaseBeforeForward = false;
 
-      // Map bounds and desert scroll (round play area, radius 10000)
-      const MAP_SIZE = 20000;
-      const MAP_RADIUS = 10000;
-      const MAP_CENTER = MAP_SIZE / 2;
+      // Map bounds and desert scroll (car stays on screen; world moves)
+      const MAP_SIZE = 6000;
       const WALL_THICKNESS = 20;
-      let offsetX = -MAP_CENTER;
-      let offsetY = -MAP_CENTER;
+      let offsetX = -MAP_SIZE / 2;
+      let offsetY = -MAP_SIZE / 2;
       const sandTileSize = 48;
-      function clampToCircle(x, y) {
-        const dx = x - MAP_CENTER;
-        const dy = y - MAP_CENTER;
-        const distSq = dx * dx + dy * dy;
-        if (distSq <= MAP_RADIUS * MAP_RADIUS) return { x, y };
-        const dist = Math.sqrt(distSq);
-        return { x: MAP_CENTER + (dx / dist) * MAP_RADIUS, y: MAP_CENTER + (dy / dist) * MAP_RADIUS };
-      }
-      function reflectAngleOffCircle(angle, wx, wy) {
-        const dx = wx - MAP_CENTER;
-        const dy = wy - MAP_CENTER;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const vx = Math.cos(angle);
-        const vy = Math.sin(angle);
-        const dot = vx * nx + vy * ny;
-        const vx2 = vx - 2 * dot * nx;
-        const vy2 = vy - 2 * dot * ny;
-        return Math.atan2(vy2, vx2);
-      }
-
-      // Chase cars (NPCs): same physics as player, fuel/temp/burn apply, top speed 150
-      const chaseMaxSpeed = 4.5;
-      const NUM_CHASE_CARS = 2;
-      const chaseCars = Array.from({ length: NUM_CHASE_CARS }, () => ({
-        x: 0, y: 0, angle: 0, speed: 0, spawned: false, spinOutUntil: 0,
-        fuel: 1.0, engineTemp: 0, overheatMode: false, overheatTimerSec: 0, engineRpm: idleRpm
-      }));
-      const chaseCollisionRadius = 36;
-      const chaseMinSeparation = 72;
-      const chaseChaseTouchRadius = 48;
-      let wasChaseChaseColliding = false;
-      const chaseReactionDelayMs = 200;
-      let playerPositionHistory = [];
-      let chaseHitCount = 0;
-      let spinOutUntil = 0;
-      let gameOver = false;
-      let wasChaseColliding = false;
-      let gamePhase = 'playing';
-      let nameInputTriggered = false;
-      let playerName = '';
-      let finalOdo = 0;
-      let finalScore = 0;
-      const spinOutDurMs = 1000;
-      const spinOutRate = 0.25;
-      const ladyMargin = WALL_THICKNESS + 120;
-      const ladyMaxR = MAP_RADIUS - ladyMargin;
-      function randomPointInCircle() {
-        const angle = Math.random() * Math.PI * 2;
-        const r = ladyMargin + Math.random() * (ladyMaxR - ladyMargin);
-        return { x: MAP_CENTER + r * Math.cos(angle), y: MAP_CENTER + r * Math.sin(angle) };
-      }
-      let ladyX = MAP_CENTER;
-      let ladyY = MAP_CENTER;
-      (function () { const p = randomPointInCircle(); ladyX = p.x; ladyY = p.y; })();
-      let ladyPickupCount = 0;
-      let wasPlayerLadyColliding = false;
-      const ladyRadius = 32;
-      const ladyChaseSpinDurMs = 2000;
-      function respawnLady() {
-        const p = randomPointInCircle();
-        ladyX = p.x;
-        ladyY = p.y;
-      }
       let totalPixelsDriven = 0;
       let carHasMoved = false;
       let engineStarted = false;
@@ -623,56 +231,9 @@
       let overheatMode = false;           // true only after 5+ s above 135, until temp < 135
       let overheatTimerSec = 0;
 
-      // 12 fuel stops inside round map (radius MAP_RADIUS), no two closer than 2500 px
-      const refuelPositionsOnMap = (function () {
-        const list = [];
-        const margin = WALL_THICKNESS + 120;
-        const maxR = MAP_RADIUS - margin;
-        const minStopDist = 2500;
-        const minStopDistSq = minStopDist * minStopDist;
-        let seed = 28471;
-        function next() {
-          seed = (seed * 1103515245 + 12345) >>> 0;
-          return seed / 0x100000000;
-        }
-        for (let i = 0; i < 12; i++) {
-          let tries = 0;
-          let placed = false;
-          while (!placed && tries < 5000) {
-            tries++;
-            const angle = next() * Math.PI * 2;
-            const r = margin + next() * (maxR - margin);
-            const cand = {
-              x: MAP_CENTER + r * Math.cos(angle),
-              y: MAP_CENTER + r * Math.sin(angle)
-            };
-            let ok = true;
-            for (let j = 0; j < list.length; j++) {
-              const dx = cand.x - list[j].x;
-              const dy = cand.y - list[j].y;
-              if (dx * dx + dy * dy < minStopDistSq) {
-                ok = false;
-                break;
-              }
-            }
-            if (ok) {
-              list.push(cand);
-              placed = true;
-            }
-          }
-          if (!placed) {
-            const angle = next() * Math.PI * 2;
-            const r = margin + next() * (maxR - margin);
-            list.push({
-              x: MAP_CENTER + r * Math.cos(angle),
-              y: MAP_CENTER + r * Math.sin(angle)
-            });
-          }
-        }
-        return list;
-      })();
-      const fuelStopRadius = 50;
-      let lastRefuelBeepIndex = -1;
+      function isRefuelTile(worldTileX, worldTileY) {
+        return (Math.abs(worldTileX * 31 + worldTileY * 17) % 127 === 0);
+      }
 
       function drawDesert() {
         // Single desert color background (game area only)
@@ -682,36 +243,12 @@
         const cx = GAME_SIZE / 2;
         const cy = GAME_SIZE / 2;
 
-        // Walls at map edges (20px thick): black and yellow diagonal stripes
-        const stripeW = 8;
-        if (!wallStripePattern) {
-          const pat = document.createElement('canvas');
-          pat.width = stripeW * 4;
-          pat.height = stripeW * 4;
-          const pg = pat.getContext('2d');
-          for (let i = -pat.width; i <= pat.width * 2; i += stripeW) {
-            pg.strokeStyle = (i / stripeW) % 2 === 0 ? '#000000' : '#ffd600';
-            pg.lineWidth = stripeW;
-            pg.lineCap = 'square';
-            pg.beginPath();
-            pg.moveTo(i, -pat.height);
-            pg.lineTo(i + pat.width + pat.height, pat.height * 2);
-            pg.stroke();
-          }
-          wallStripePattern = ctx.createPattern(pat, 'repeat');
-        }
-        ctx.fillStyle = wallStripePattern;
-        const wallCx = cx + MAP_CENTER + offsetX;
-        const wallCy = cy + MAP_CENTER + offsetY;
-        ctx.beginPath();
-        ctx.arc(wallCx, wallCy, MAP_RADIUS + WALL_THICKNESS, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = 'destination-out';
+        // Black walls at map edges (20px thick)
         ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(wallCx, wallCy, MAP_RADIUS, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillRect(cx + offsetX, cy + offsetY, WALL_THICKNESS, MAP_SIZE);
+        ctx.fillRect(cx + offsetX + MAP_SIZE - WALL_THICKNESS, cy + offsetY, WALL_THICKNESS, MAP_SIZE);
+        ctx.fillRect(cx + offsetX, cy + offsetY, MAP_SIZE, WALL_THICKNESS);
+        ctx.fillRect(cx + offsetX, cy + offsetY + MAP_SIZE - WALL_THICKNESS, MAP_SIZE, WALL_THICKNESS);
 
         // Random 4×4 black reference dots in world space (deterministic). Preload margin so dots exist before they enter view.
         const dotCellSize = 48;
@@ -735,9 +272,7 @@
             const oy = (cellX * 11 + cellY * 19) % Math.max(1, dotCellSize - dotSize);
             const wx = cellX * dotCellSize + ox;
             const wy = cellY * dotCellSize + oy;
-            const dxw = wx - MAP_CENTER;
-            const dyw = wy - MAP_CENTER;
-            if (dxw * dxw + dyw * dyw > MAP_RADIUS * MAP_RADIUS) continue;
+            if (wx < WALL_THICKNESS || wx > MAP_SIZE - WALL_THICKNESS || wy < WALL_THICKNESS || wy > MAP_SIZE - WALL_THICKNESS) continue;
             const sx = cx + wx + offsetX;
             const sy = cy + wy + offsetY;
             if (sx < -screenMargin || sx > GAME_SIZE + screenMargin || sy < -screenMargin || sy > GAME_SIZE + screenMargin) continue;
@@ -765,9 +300,7 @@
             const eoy = (ex * 13 + ey * 29) % Math.max(1, ellipseCellSize - 80);
             const ewx = ex * ellipseCellSize + eox;
             const ewy = ey * ellipseCellSize + eoy;
-            const edx = ewx - MAP_CENTER;
-            const edy = ewy - MAP_CENTER;
-            if (edx * edx + edy * edy > MAP_RADIUS * MAP_RADIUS) continue;
+            if (ewx < WALL_THICKNESS || ewx > MAP_SIZE - WALL_THICKNESS || ewy < WALL_THICKNESS || ewy > MAP_SIZE - WALL_THICKNESS) continue;
             const esx = cx + ewx + offsetX;
             const esy = cy + ewy + offsetY;
             if (esx < -80 || esx > GAME_SIZE + 80 || esy < -80 || esy > GAME_SIZE + 80) continue;
@@ -777,26 +310,28 @@
           }
         }
 
-        // Fuel stations: 12 stops at fixed random positions, same size as before (80×80)
-        const fuelStopDrawSize = 80;
-        for (let p = 0; p < refuelPositionsOnMap.length; p++) {
-          const stop = refuelPositionsOnMap[p];
-          const sx = cx + stop.x + offsetX;
-          const sy = cy + stop.y + offsetY;
-          if (sx < -80 || sx > GAME_SIZE + 80 || sy < -80 || sy > GAME_SIZE + 80) continue;
-          ctx.save();
-          ctx.translate(sx, sy);
-          if (gaspumpImg.complete && gaspumpImg.naturalWidth > 0) {
-            ctx.drawImage(gaspumpImg, -fuelStopDrawSize / 2, -fuelStopDrawSize / 2, fuelStopDrawSize, fuelStopDrawSize);
-          } else {
-            ctx.scale(2, 2);
+        // Fuel stations: gas-pump symbol, aligned with refuel grid (rare)
+        const baseTileX = Math.floor(-offsetX / sandTileSize);
+        const baseTileY = Math.floor(-offsetY / sandTileSize);
+        for (let gy = baseTileY - 10; gy <= baseTileY + 10; gy++) {
+          for (let gx = baseTileX - 12; gx <= baseTileX + 12; gx++) {
+            if (!isRefuelTile(gx, gy)) continue;
+            const worldX = gx * sandTileSize;
+            const worldY = gy * sandTileSize;
+            const sx = cx + worldX + offsetX;
+            const sy = cy + worldY + offsetY;
+            if (sx < -50 || sx > GAME_SIZE + 50 || sy < -50 || sy > GAME_SIZE + 50) continue;
+            ctx.save();
+            ctx.translate(sx, sy);
+            // Base circle
             ctx.fillStyle = '#e8d4b8';
             ctx.strokeStyle = '#8b7355';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.roundRect(-20, -20, 40, 40, 10);
+            ctx.arc(0, 0, 20, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
+            // Gas pump symbol: circle (top), stem, nozzle (right)
             ctx.fillStyle = '#2d5016';
             ctx.strokeStyle = '#1a3010';
             ctx.lineWidth = 1;
@@ -810,8 +345,8 @@
             ctx.arc(14, 6.5, 3, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
+            ctx.restore();
           }
-          ctx.restore();
         }
       }
 
@@ -821,111 +356,51 @@
 
         ctx.save();
         ctx.translate(cx, cy);
+        // Align car so angle 0 = facing right (movement direction matches drawing)
         ctx.rotate(car.angle - Math.PI / 2);
+
+        // Body (rounded rect)
         const w = car.width / 2;
         const h = car.length / 2;
-        if (mainCarImg.complete && mainCarImg.naturalWidth > 0) {
-          ctx.scale(1, -1);
-          const mainW = mainCarImg.naturalWidth;
-          const mainH = mainCarImg.naturalHeight;
-          ctx.drawImage(mainCarImg, -mainW / 2, -mainH / 2, mainW, mainH);
-        } else {
-          ctx.fillStyle = '#2d5016';
-          ctx.beginPath();
-          ctx.roundRect(-w, -h, car.width, car.length, 6);
-          ctx.fill();
-          ctx.strokeStyle = '#1a3010';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.fillStyle = 'rgba(120, 180, 220, 0.6)';
-          ctx.beginPath();
-          ctx.moveTo(-w * 0.6, h * 0.3);
-          ctx.lineTo(w * 0.6, h * 0.3);
-          ctx.lineTo(w * 0.5, h);
-          ctx.lineTo(-w * 0.5, h);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-          ctx.fillStyle = '#223d12';
-          ctx.beginPath();
-          ctx.moveTo(-w * 0.5, -h);
-          ctx.lineTo(w * 0.5, -h);
-          ctx.lineTo(w * 0.6, -h * 0.3);
-          ctx.lineTo(-w * 0.6, -h * 0.3);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-          ctx.fillStyle = '#1a1a1a';
-          ctx.fillRect(-w - 2, -h + 4, 4, 12);
-          ctx.fillRect(w - 2, -h + 4, 4, 12);
-          ctx.fillRect(-w - 2, h - 16, 4, 12);
-          ctx.fillRect(w - 2, h - 16, 4, 12);
-        }
-        ctx.restore();
+        ctx.fillStyle = '#2d5016';
+        ctx.beginPath();
+        ctx.roundRect(-w, -h, car.width, car.length, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#1a3010';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          const chaseSx = cx + c.x + offsetX;
-          const chaseSy = cy + c.y + offsetY;
-          if (chaseSx >= -car.length && chaseSx <= GAME_SIZE + car.length && chaseSy >= -car.length && chaseSy <= GAME_SIZE + car.length) {
-            ctx.save();
-            ctx.translate(chaseSx, chaseSy);
-            ctx.rotate(c.angle - Math.PI / 2);
-            const cw = car.width / 2;
-            const ch = car.length / 2;
-            if (chaseCarImg.complete && chaseCarImg.naturalWidth > 0) {
-              ctx.scale(1, -1);
-              const chaseW = chaseCarImg.naturalWidth;
-              const chaseH = chaseCarImg.naturalHeight;
-              ctx.drawImage(chaseCarImg, -chaseW / 2, -chaseH / 2, chaseW, chaseH);
-            } else {
-              ctx.fillStyle = '#8B0000';
-              ctx.strokeStyle = '#5c0000';
-              ctx.lineWidth = 2;
-              ctx.beginPath();
-              ctx.roundRect(-cw, -ch, car.width, car.length, 6);
-              ctx.fill();
-              ctx.stroke();
-              ctx.fillStyle = 'rgba(180, 100, 100, 0.6)';
-              ctx.beginPath();
-              ctx.moveTo(-cw * 0.6, ch * 0.3);
-              ctx.lineTo(cw * 0.6, ch * 0.3);
-              ctx.lineTo(cw * 0.5, ch);
-              ctx.lineTo(-cw * 0.5, ch);
-              ctx.closePath();
-              ctx.fill();
-              ctx.stroke();
-              ctx.fillStyle = '#5c0000';
-              ctx.beginPath();
-              ctx.moveTo(-cw * 0.5, -ch);
-              ctx.lineTo(cw * 0.5, -ch);
-              ctx.lineTo(cw * 0.6, -ch * 0.3);
-              ctx.lineTo(-cw * 0.6, -ch * 0.3);
-              ctx.closePath();
-              ctx.fill();
-              ctx.stroke();
-              ctx.fillStyle = '#1a1a1a';
-              ctx.fillRect(-cw - 2, -ch + 4, 4, 12);
-              ctx.fillRect(cw - 2, -ch + 4, 4, 12);
-              ctx.fillRect(-cw - 2, ch - 16, 4, 12);
-              ctx.fillRect(cw - 2, ch - 16, 4, 12);
-            }
-            ctx.restore();
-          }
-        }
-        const ladySx = cx + ladyX + offsetX;
-        const ladySy = cy + ladyY + offsetY;
-        if (ladySx >= -50 && ladySx <= GAME_SIZE + 50 && ladySy >= -50 && ladySy <= GAME_SIZE + 50) {
-          ctx.save();
-          ctx.translate(ladySx, ladySy);
-          if (hitchikerImg.complete && hitchikerImg.naturalWidth > 0 && hitchikerImg.naturalHeight > 0) {
-            const targetH = car.length * 1.5;
-            const scale = targetH / hitchikerImg.naturalHeight;
-            const targetW = hitchikerImg.naturalWidth * scale;
-            ctx.drawImage(hitchikerImg, -targetW / 2, -targetH, targetW, targetH);
-          }
-          ctx.restore();
-        }
+        // Windshield (front)
+        ctx.fillStyle = 'rgba(120, 180, 220, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.6, h * 0.3);
+        ctx.lineTo(w * 0.6, h * 0.3);
+        ctx.lineTo(w * 0.5, h);
+        ctx.lineTo(-w * 0.5, h);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#1a3010';
+        ctx.stroke();
+
+        // Rear (slightly darker)
+        ctx.fillStyle = '#223d12';
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.5, -h);
+        ctx.lineTo(w * 0.5, -h);
+        ctx.lineTo(w * 0.6, -h * 0.3);
+        ctx.lineTo(-w * 0.6, -h * 0.3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Wheels (simple rectangles)
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(-w - 2, -h + 4, 4, 12);
+        ctx.fillRect(w - 2, -h + 4, 4, 12);
+        ctx.fillRect(-w - 2, h - 16, 4, 12);
+        ctx.fillRect(w - 2, h - 16, 4, 12);
+
+        ctx.restore();
       }
 
       function drawPixelsGauge() {
@@ -952,22 +427,14 @@
         g.arc(cx, cy, r - 8, gaugeStart, gaugeEnd);
         g.stroke();
 
-        const odoFillFrac = gameOver ? 0 : (3 - chaseHitCount) / 3;
-        const odoColor = odoFillFrac > 2/3 ? gaugeGreen : (odoFillFrac > 1/3 ? gaugeYellow : gaugeRed);
-        g.strokeStyle = odoColor;
-        g.lineWidth = 6;
-        g.beginPath();
-        g.arc(cx, cy, r - 8, gaugeStart, gaugeStart + odoFillFrac * gaugeSweep);
-        g.stroke();
-
         g.font = '10px "Segoe UI", system-ui, sans-serif';
         g.fillStyle = gaugeText;
         g.textAlign = 'center';
-        g.fillText('ODO', cx, cy - 18);
+        g.fillText('KM', cx, cy - 18);
 
         g.font = 'bold 24px "Segoe UI", system-ui, sans-serif';
         g.textBaseline = 'middle';
-        const tensOfPixels = (gameOver || carHasMoved) ? Math.min(99999, Math.floor(totalPixelsDriven / 10)) : 0;
+        const tensOfPixels = carHasMoved ? Math.min(99999, Math.floor(totalPixelsDriven / 10)) : 0;
         const str = tensOfPixels.toString().padStart(5, '0');
         const totalW = g.measureText(str).width;
         const restW = g.measureText(str.slice(0, -1)).width;
@@ -979,71 +446,6 @@
         g.textAlign = 'center';
       }
 
-      function drawMinimap() {
-        const g = gaugeCtx;
-        const r = gaugeR;
-        const cx = gaugePad + r;
-        const cy = gaugePad + r + gaugeStep * 6;
-
-        g.fillStyle = gaugeBg;
-        g.strokeStyle = gaugeTrack;
-        g.lineWidth = 2;
-        g.beginPath();
-        g.arc(cx, cy, r, 0, Math.PI * 2);
-        g.fill();
-        g.stroke();
-
-        const scale = (r - 10) / MAP_RADIUS;
-        function worldToMap(wx, wy) {
-          return { x: cx + (wx - MAP_CENTER) * scale, y: cy + (wy - MAP_CENTER) * scale };
-        }
-        function inCircle(wx, wy) {
-          const dx = wx - MAP_CENTER;
-          const dy = wy - MAP_CENTER;
-          return dx * dx + dy * dy <= MAP_RADIUS * MAP_RADIUS;
-        }
-
-        const fuelDotSize = 2;
-        g.fillStyle = '#00bcd4';
-        for (let i = 0; i < refuelPositionsOnMap.length; i++) {
-          const rStop = refuelPositionsOnMap[i];
-          if (!inCircle(rStop.x, rStop.y)) continue;
-          const p = worldToMap(rStop.x, rStop.y);
-          g.fillRect(p.x - fuelDotSize / 2, p.y - fuelDotSize / 2, fuelDotSize, fuelDotSize);
-        }
-
-        const dotSize = 4;
-        const cwx = -offsetX;
-        const cwy = -offsetY;
-        if (inCircle(cwx, cwy)) {
-          const p = worldToMap(cwx, cwy);
-          g.fillStyle = '#ffd600';
-          g.fillRect(p.x - dotSize / 2, p.y - dotSize / 2, dotSize, dotSize);
-        }
-
-        g.fillStyle = '#ff0000';
-        const chaseDotSize = 5;
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          if (!inCircle(c.x, c.y)) continue;
-          const p = worldToMap(c.x, c.y);
-          g.fillRect(p.x - chaseDotSize / 2, p.y - chaseDotSize / 2, chaseDotSize, chaseDotSize);
-        }
-
-        const ladyDotSize = 4;
-        if (inCircle(ladyX, ladyY)) {
-          const p = worldToMap(ladyX, ladyY);
-          g.fillStyle = '#ff69b4';
-          g.fillRect(p.x - ladyDotSize / 2, p.y - ladyDotSize / 2, ladyDotSize, ladyDotSize);
-        }
-
-        g.fillStyle = '#ff69b4';
-        g.font = 'bold 24px "Segoe UI", system-ui, sans-serif';
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.fillText(ladyPickupCount.toString(), cx, cy + r - 18);
-      }
-
       function drawSpeedo() {
         const r = gaugeR;
         const cx = gaugePad + r;
@@ -1051,8 +453,8 @@
         const g = gaugeCtx;
 
         const speedometerMax = 180;
-        const speedNorm = gameOver ? 0 : (carHasMoved ? Math.min(speedometerMax, (Math.abs(car.speed) / car.maxSpeed) * 150) : 0);
-        const isReverse = !gameOver && carHasMoved && car.speed < -0.05;
+        const speedNorm = carHasMoved ? Math.min(speedometerMax, (Math.abs(car.speed) / car.maxSpeed) * 150) : 0;
+        const isReverse = carHasMoved && car.speed < -0.05;
 
         g.fillStyle = gaugeBg;
         g.strokeStyle = gaugeTrack;
@@ -1097,8 +499,8 @@
         const cy = gaugePad + r + gaugeStep * 3;
         const g = gaugeCtx;
 
-        const fuelPct = gameOver ? 0 : Math.max(0, Math.min(100, (fuel / fuelMax) * 100));
-        const lowFuel = !gameOver && carHasMoved && fuelPct <= 20;
+        const fuelPct = carHasMoved ? Math.max(0, Math.min(100, (fuel / fuelMax) * 100)) : 0;
+        const lowFuel = carHasMoved && fuelPct <= 15;
         const flashPhase = lowFuel && (Date.now() / 350 % 2 < 1);
 
         g.fillStyle = flashPhase ? gaugeRed : gaugeBg;
@@ -1120,7 +522,7 @@
         g.arc(cx, cy, r - 8, gaugeStart, gaugeEnd);
         g.stroke();
 
-        g.strokeStyle = !carHasMoved ? gaugeTrack : (fuelPct > 40 ? gaugeGreen : (fuelPct > 20 ? gaugeYellow : gaugeRed));
+        g.strokeStyle = !carHasMoved ? gaugeTrack : (fuelPct > 30 ? gaugeGreen : (fuelPct > 15 ? gaugeYellow : gaugeRed));
         g.lineWidth = 6;
         g.beginPath();
         g.arc(cx, cy, r - 8, gaugeStart, gaugeStart + (fuelPct / 100) * gaugeSweep);
@@ -1134,7 +536,7 @@
         g.font = 'bold 24px "Segoe UI", system-ui, sans-serif';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        g.fillStyle = flashPhase ? gaugeText : (!carHasMoved ? gaugeText : (fuelPct > 40 ? gaugeGreen : (fuelPct > 20 ? gaugeYellow : gaugeRed)));
+        g.fillStyle = flashPhase ? gaugeText : (!carHasMoved ? gaugeText : (fuelPct > 30 ? gaugeGreen : (fuelPct > 15 ? gaugeYellow : gaugeRed)));
         g.fillText(Math.round(fuelPct) + '%', cx, cy + 4);
       }
 
@@ -1145,9 +547,9 @@
         const g = gaugeCtx;
 
         const hasFuel = fuel > 0.001;
-        const rawRatio = gameOver ? 0 : (carHasMoved ? Math.max(0, Math.min(1, lastFuelRatePerSec / fuelRateMaxPerSec)) : 0);
-        const rateRatio = gameOver ? 0 : (engineStarted && !carHasMoved ? 1/99 : (carHasMoved && hasFuel ? Math.max(0, Math.min(1, (rawRatio - 0.01) / 0.99)) : 0));
-        const ratePct = gameOver ? 0 : (engineStarted && !carHasMoved ? 1 : (carHasMoved && hasFuel ? Math.max(1, Math.min(100, 1 + (rawRatio - 0.01) / 0.99 * 99)) : 0));
+        const rawRatio = carHasMoved ? Math.max(0, Math.min(1, lastFuelRatePerSec / fuelRateMaxPerSec)) : 0;
+        const rateRatio = engineStarted && !carHasMoved ? 1/99 : (carHasMoved && hasFuel ? Math.max(0, Math.min(1, (rawRatio - 0.01) / 0.99)) : 0);
+        const ratePct = engineStarted && !carHasMoved ? 1 : (carHasMoved && hasFuel ? Math.max(1, Math.min(100, 1 + (rawRatio - 0.01) / 0.99 * 99)) : 0);
 
         g.fillStyle = gaugeBg;
         g.strokeStyle = gaugeTrack;
@@ -1191,7 +593,7 @@
         const cy = gaugePad + r;
         const g = gaugeCtx;
 
-        const rpm = gameOver ? 0 : (engineStarted && !carHasMoved ? idleRpm : (carHasMoved ? Math.max(0, Math.min(maxRpm, engineRpm)) : 0));
+        const rpm = engineStarted && !carHasMoved ? idleRpm : (carHasMoved ? Math.max(0, Math.min(maxRpm, engineRpm)) : 0);
         const rpmNorm = rpm / maxRpm;
 
         g.fillStyle = gaugeBg;
@@ -1264,7 +666,7 @@
         g.arc(cx, cy, r - 8, gaugeStart, gaugeEnd);
         g.stroke();
 
-        const tempClamp = gameOver ? 0 : (carHasMoved ? Math.max(0, Math.min(tempMax, engineTemp)) : 0);
+        const tempClamp = carHasMoved ? Math.max(0, Math.min(tempMax, engineTemp)) : 0;
         const tempFrac = tempClamp / tempMax;
         const fillEnd = gaugeStart + tempFrac * gaugeSweep;
 
@@ -1287,73 +689,26 @@
       }
 
       function update(dt) {
-        if (!layoutMode) return;
         const rate = Math.min(dt / 16, 2);
 
         const speedRatio = Math.abs(car.speed) / car.maxSpeed;
         const hasFuel = fuel > 0.001;
-        const lowFuel = hasFuel && (fuel / fuelMax) <= 0.20;
+        const lowFuel = hasFuel && (fuel / fuelMax) <= 0.15;
 
-        // Refuel when car is within fuelStopRadius of any of the 12 fuel stops; beep once per visit
-        const carX = -offsetX;
-        const carY = -offsetY;
-        let refueledThisFrame = false;
-        for (let p = 0; p < refuelPositionsOnMap.length; p++) {
-          const stop = refuelPositionsOnMap[p];
-          const dx = carX - stop.x;
-          const dy = carY - stop.y;
-          if (dx * dx + dy * dy < fuelStopRadius * fuelStopRadius) {
-            fuel = fuelMax;
-            refueledThisFrame = true;
-            if (lastRefuelBeepIndex !== p) {
-              lastRefuelBeepIndex = p;
-              playRefuelBeep();
-            }
-            break;
+        // Refuel when driving over a pink tile; short beep once per tile visit
+        const carTileX = Math.floor(-offsetX / sandTileSize);
+        const carTileY = Math.floor(-offsetY / sandTileSize);
+        if (isRefuelTile(carTileX, carTileY)) {
+          fuel = fuelMax;
+          const tileKey = carTileX + ',' + carTileY;
+          if (lastRefuelBeepTile !== tileKey) {
+            lastRefuelBeepTile = tileKey;
+            playRefuelBeep();
           }
-        }
-        if (!refueledThisFrame) lastRefuelBeepIndex = -1;
-
-        const now = Date.now();
-        const isSpinning = now < spinOutUntil && !gameOver;
-
-        if (gameOver) {
-          car.speed *= 0.92;
-          if (Math.abs(car.speed) < 0.01) car.speed = 0;
-          const move = car.speed * rate;
-          offsetX -= Math.cos(car.angle) * move;
-          offsetY -= Math.sin(car.angle) * move;
-          let gCarX = -offsetX;
-          let gCarY = -offsetY;
-          const gDistSq = (gCarX - MAP_CENTER) ** 2 + (gCarY - MAP_CENTER) ** 2;
-          if (gDistSq > MAP_RADIUS * MAP_RADIUS) {
-            const gDist = Math.sqrt(gDistSq);
-            offsetX = -(MAP_CENTER + (gCarX - MAP_CENTER) * (MAP_RADIUS / gDist));
-            offsetY = -(MAP_CENTER + (gCarY - MAP_CENTER) * (MAP_RADIUS / gDist));
-            car.angle = reflectAngleOffCircle(car.angle, -offsetX, -offsetY);
-          }
-          while (car.angle > Math.PI) car.angle -= 2 * Math.PI;
-          while (car.angle < -Math.PI) car.angle += 2 * Math.PI;
-          engineRpm = 0;
-        } else if (isSpinning) {
-          car.angle += spinOutRate * rate;
-          const move = car.speed * rate;
-          offsetX -= Math.cos(car.angle) * move;
-          offsetY -= Math.sin(car.angle) * move;
-          let gCarX = -offsetX;
-          let gCarY = -offsetY;
-          const gDistSq = (gCarX - MAP_CENTER) ** 2 + (gCarY - MAP_CENTER) ** 2;
-          if (gDistSq > MAP_RADIUS * MAP_RADIUS) {
-            const gDist = Math.sqrt(gDistSq);
-            offsetX = -(MAP_CENTER + (gCarX - MAP_CENTER) * (MAP_RADIUS / gDist));
-            offsetY = -(MAP_CENTER + (gCarY - MAP_CENTER) * (MAP_RADIUS / gDist));
-            car.angle = reflectAngleOffCircle(car.angle, -offsetX, -offsetY);
-          }
-          while (car.angle > Math.PI) car.angle -= 2 * Math.PI;
-          while (car.angle < -Math.PI) car.angle += 2 * Math.PI;
-          totalPixelsDriven += Math.abs(move);
-          if (totalPixelsDriven > 0) carHasMoved = true;
         } else {
+          lastRefuelBeepTile = null;
+        }
+
         // Neutral gear behaviour
         // When fully stopped and no throttle, fall back to N
         if (Math.abs(car.speed) < 0.02 && !keys.up && !keys.down) {
@@ -1381,7 +736,7 @@
           } else if (car.speed >= 0 && !needReleaseBeforeForward && hasFuel && !overheatMode) {
             const gearMax = gearMaxSpeeds[currentGear];
             const gearMaxAt7500 = gearMax * (maxRpm / redlineRpm);
-            const gearAccel = car.acceleration * gearAccelMultipliers[currentGear];
+            const gearAccel = car.acceleration * gearAccelMultipliers[currentGear] * (lowFuel ? 0.5 : 1);
             const speedFrac = gearMaxAt7500 > 0 ? car.speed / gearMaxAt7500 : 0;
             const speedFactor = Math.max(0.25, 1 - 0.75 * speedFrac);
             car.speed = Math.min(car.speed + gearAccel * speedFactor * rate, gearMaxAt7500);
@@ -1395,7 +750,7 @@
           if (car.speed > 0) {
             car.speed = Math.max(car.speed - car.acceleration * rate, 0);
           } else if (car.speed <= 0 && !needReleaseBeforeReverse && hasFuel && !overheatMode) {
-            const revAccel = car.acceleration;
+            const revAccel = car.acceleration * (lowFuel ? 0.5 : 1);
             car.speed = Math.max(car.speed - revAccel * rate, -car.maxSpeed * 0.2);
           } else if (car.speed <= 0 && !hasFuel) {
             car.speed = Math.min(0, car.speed + car.acceleration * rate);
@@ -1403,9 +758,9 @@
             car.speed = 0;
           }
         }
-        // Out of fuel: lose power and slowly decelerate to a stop (rate at 1/4 of normal)
+        // Out of fuel: lose power and slowly decelerate to a stop
         if (!hasFuel && Math.abs(car.speed) > 0.005) {
-          car.speed *= Math.pow(0.985, rate * 0.25);
+          car.speed *= Math.pow(0.985, rate);
           if (Math.abs(car.speed) < 0.005) car.speed = 0;
         }
         // Overheat limp (only after 5 s above 135): decelerate to 3500 rpm in current gear (same gentle rate as out of fuel)
@@ -1454,39 +809,29 @@
 
         const tempFloor = hasFuel ? (engineTemp >= 60 ? 60 : engineTemp) : 0;
         const accelerating = (keys.up && car.speed > 0.02 && hasFuel) || (keys.down && car.speed < -0.02 && hasFuel);
-        // Fuel burn vs RPM:
-        // 1% at idle (1000), 8% at 2000, 15% at 3000, 30% at 4000, 60% at 5000, then linear to 100% at 7500.
+        // When accelerating: instantly 83% unless rpm > 6250 (then 83–100% by rpm). When not: 1% at idle, 83% at 6250, 100% at 7500.
         let burnRatio;
-        const rpm = engineRpm;
-        if (rpm <= idleRpm) {
-          burnRatio = 0.01;
-        } else if (rpm <= 2000) {
-          const t = (rpm - idleRpm) / (2000 - idleRpm);
-          burnRatio = 0.01 + t * (0.08 - 0.01);
-        } else if (rpm <= 3000) {
-          const t = (rpm - 2000) / (3000 - 2000);
-          burnRatio = 0.08 + t * (0.15 - 0.08);
-        } else if (rpm <= 4000) {
-          const t = (rpm - 3000) / (4000 - 3000);
-          burnRatio = 0.15 + t * (0.30 - 0.15);
-        } else if (rpm <= 5000) {
-          const t = (rpm - 4000) / (5000 - 4000);
-          burnRatio = 0.30 + t * (0.60 - 0.30);
+        if (accelerating) {
+          if (engineRpm <= redlineRpm) {
+            burnRatio = 0.83;
+          } else {
+            burnRatio = 0.83 + (engineRpm - redlineRpm) / (maxRpm - redlineRpm) * (1 - 0.83);
+          }
         } else {
-          const t = Math.min(1, (rpm - 5000) / (maxRpm - 5000));
-          burnRatio = 0.60 + t * (1.0 - 0.60);
-        }
-        if (accelerating && rpm < redlineRpm) {
-          burnRatio = 0.80;
+          if (engineRpm <= redlineRpm) {
+            burnRatio = 0.01 + (engineRpm - idleRpm) / (redlineRpm - idleRpm) * (0.83 - 0.01);
+          } else {
+            burnRatio = 0.83 + (engineRpm - redlineRpm) / (maxRpm - redlineRpm) * (1 - 0.83);
+          }
         }
         burnRatio = Math.max(0.01, Math.min(1, burnRatio));
         if (overheatMode) burnRatio = Math.min(burnRatio, 0.40);
         // Fuel by distance: at 100% burn range = rangeAt100BurnPixels; at 40% burn range is 2.5× that
         const pixelsThisFrame = Math.abs(car.speed * rate);
-        const fuelPerPixel = (fuelMax / rangeAt100BurnPixels) * burnRatio;
+        const fuelPerPixel = (fuelMax / rangeAt100BurnPixels) * burnRatio * (lowFuel ? 0.5 : 1);
         fuel -= fuelPerPixel * pixelsThisFrame;
         fuel = Math.max(0, fuel);
-        lastFuelRatePerSec = fuelRateMaxPerSec * burnRatio; // for BURN gauge 1–100%
+        lastFuelRatePerSec = fuelRateMaxPerSec * burnRatio * (lowFuel ? 0.5 : 1); // for BURN gauge 1–100%
 
         const decelerating = keys.brake || (car.speed > 0.02 && !keys.up) || (car.speed < -0.02 && !keys.down);
         // In overheat (temp flashing), accelerator must not affect temp — only allow drops while it is cooling
@@ -1521,6 +866,19 @@
           }
         }
 
+        // Low fuel: cap speed at 40% burn rpm (3500) in current gear
+        if (lowFuel && Math.abs(car.speed) > 0.005) {
+          const rpmFrac40 = (lowFuelRpmCap - idleRpm) / (redlineRpm - idleRpm);
+          if (car.speed > 0) {
+            const gearMax = gearMaxSpeeds[currentGear];
+            const cap = gearMax > 0 ? gearMax * rpmFrac40 : 0;
+            if (car.speed > cap) car.speed = cap;
+          } else {
+            const capReverse = -(rpmFrac40 * 30 * car.maxSpeed / 150);
+            if (car.speed < capReverse) car.speed = capReverse;
+          }
+        }
+
         // When throttle released and above 6250-rpm speed: slowly decay toward 6250 (rpm and speed drop together)
         if (car.speed > 0 && !keys.up && hasFuel && !overheatMode && currentGear > neutralGear) {
           const gearMax = gearMaxSpeeds[currentGear];
@@ -1545,385 +903,35 @@
         const move = car.speed * rate;
         offsetX -= Math.cos(car.angle) * move;
         offsetY -= Math.sin(car.angle) * move;
+        // Walls (20px thick): reflect at inner edge so car stays in playable area
         let carWorldX = -offsetX;
         let carWorldY = -offsetY;
-        const carDistSq = (carWorldX - MAP_CENTER) ** 2 + (carWorldY - MAP_CENTER) ** 2;
-        if (carDistSq > MAP_RADIUS * MAP_RADIUS) {
-          const carDist = Math.sqrt(carDistSq);
-          offsetX = -(MAP_CENTER + (carWorldX - MAP_CENTER) * (MAP_RADIUS / carDist));
-          offsetY = -(MAP_CENTER + (carWorldY - MAP_CENTER) * (MAP_RADIUS / carDist));
-          car.angle = reflectAngleOffCircle(car.angle, -offsetX, -offsetY);
+        if (carWorldX < WALL_THICKNESS) {
+          offsetX = -WALL_THICKNESS;
+          car.angle = Math.PI - car.angle;
+        } else if (carWorldX > MAP_SIZE - WALL_THICKNESS) {
+          offsetX = -(MAP_SIZE - WALL_THICKNESS);
+          car.angle = Math.PI - car.angle;
         }
         carWorldX = -offsetX;
         carWorldY = -offsetY;
+        if (carWorldY < WALL_THICKNESS) {
+          offsetY = -WALL_THICKNESS;
+          car.angle = -car.angle;
+        } else if (carWorldY > MAP_SIZE - WALL_THICKNESS) {
+          offsetY = -(MAP_SIZE - WALL_THICKNESS);
+          car.angle = -car.angle;
+        }
         while (car.angle > Math.PI) car.angle -= 2 * Math.PI;
         while (car.angle < -Math.PI) car.angle += 2 * Math.PI;
         totalPixelsDriven += Math.abs(move);
         if (totalPixelsDriven > 0) carHasMoved = true;
-        }
-
-        const playerX = -offsetX;
-        const playerY = -offsetY;
-        playerPositionHistory.push({ t: now, x: playerX, y: playerY });
-        while (playerPositionHistory.length > 0 && playerPositionHistory[0].t < now - 500) playerPositionHistory.shift();
-        let targetX = playerX;
-        let targetY = playerY;
-        for (let hi = playerPositionHistory.length - 1; hi >= 0; hi--) {
-          if (playerPositionHistory[hi].t <= now - chaseReactionDelayMs) {
-            targetX = playerPositionHistory[hi].x;
-            targetY = playerPositionHistory[hi].y;
-            break;
-          }
-        }
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          if (!c.spawned) {
-            const minDist = 5000;
-            const angle = (ci / NUM_CHASE_CARS) * Math.PI * 2 + Math.random() * Math.PI * 0.8;
-            const dist = minDist + Math.random() * 3000;
-            c.x = playerX + dist * Math.cos(angle);
-            c.y = playerY + dist * Math.sin(angle);
-            const clamped = clampToCircle(c.x, c.y);
-            c.x = clamped.x;
-            c.y = clamped.y;
-            c.angle = Math.atan2(playerY - c.y, playerX - c.x);
-            c.speed = 0;
-            c.spawned = true;
-          }
-          if (gameOver) {
-            c.speed = 0;
-          } else if (now < c.spinOutUntil) {
-          c.angle += spinOutRate * rate;
-          const chaseMoveFinal = c.speed * rate;
-          c.x += Math.cos(c.angle) * chaseMoveFinal;
-          c.y += Math.sin(c.angle) * chaseMoveFinal;
-          const cDistSq = (c.x - MAP_CENTER) ** 2 + (c.y - MAP_CENTER) ** 2;
-          if (cDistSq > MAP_RADIUS * MAP_RADIUS) {
-            const cDist = Math.sqrt(cDistSq);
-            c.x = MAP_CENTER + (c.x - MAP_CENTER) * (MAP_RADIUS / cDist);
-            c.y = MAP_CENTER + (c.y - MAP_CENTER) * (MAP_RADIUS / cDist);
-            c.angle = reflectAngleOffCircle(c.angle, c.x, c.y);
-          }
-          while (c.angle > Math.PI) c.angle -= 2 * Math.PI;
-          while (c.angle < -Math.PI) c.angle += 2 * Math.PI;
-          } else {
-          const chaseHasFuel = true;
-          const chaseLowFuel = false;
-          c.engineRpm = c.speed > 0.01
-            ? idleRpm + (c.speed / chaseMaxSpeed) * (redlineRpm - idleRpm)
-            : redlineRpm * 0.6;
-          c.engineRpm = Math.max(idleRpm, Math.min(maxRpm, c.engineRpm));
-          const chaseAccelerating = c.speed > 0.02;
-          let chaseBurnRatio = chaseAccelerating
-            ? (c.engineRpm <= redlineRpm ? 0.83 : 0.83 + (c.engineRpm - redlineRpm) / (maxRpm - redlineRpm) * 0.17)
-            : (c.engineRpm <= redlineRpm ? 0.01 + (c.engineRpm - idleRpm) / (redlineRpm - idleRpm) * 0.82 : 0.83 + (c.engineRpm - redlineRpm) / (maxRpm - redlineRpm) * 0.17);
-          chaseBurnRatio = Math.max(0.01, Math.min(1, chaseBurnRatio));
-          if (c.overheatMode) chaseBurnRatio = Math.min(chaseBurnRatio, 0.40);
-          const chaseTempFloor = c.engineTemp >= 60 ? 60 : c.engineTemp;
-          if (chaseAccelerating && !c.overheatMode) {
-            c.engineTemp = Math.min(tempMax, c.engineTemp + tempRiseRatePerSec * (dt / 1000));
-          } else if (c.engineRpm < tempRpmFallThreshold) {
-            c.engineTemp = Math.max(chaseTempFloor, c.engineTemp - tempDropRatePerSec * (dt / 1000));
-          }
-          if (c.engineTemp > overheatTempEnter) {
-            c.overheatTimerSec += dt / 1000;
-            if (c.overheatTimerSec >= overheatDelaySec) c.overheatMode = true;
-          } else {
-            c.overheatTimerSec = 0;
-            if (c.engineTemp < overheatTempExit) c.overheatMode = false;
-          }
-          const chaseOverheatSpeedCap = gearMaxSpeeds[1] * (overheatRpmCap - idleRpm) / (redlineRpm - idleRpm);
-          if (c.overheatMode && c.speed > 0.005) {
-            c.speed *= Math.pow(0.985, rate);
-            if (c.speed < chaseOverheatSpeedCap) c.speed = chaseOverheatSpeedCap;
-            if (c.speed < 0.005) c.speed = 0;
-          }
-          const dx = targetX - c.x;
-          const dy = targetY - c.y;
-          const desiredAngle = Math.atan2(dy, dx);
-          let angleDiff = desiredAngle - c.angle;
-          while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
-          while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
-          const chaseTurn = car.turnRate * rate * (Math.abs(c.speed) > 0.1 ? 1 : 0.7);
-          c.angle += Math.max(-chaseTurn, Math.min(chaseTurn, angleDiff));
-          if (!c.overheatMode) {
-            c.speed = Math.min(chaseMaxSpeed, c.speed + car.acceleration * rate);
-          }
-          const chaseMoveFinal = c.speed * rate;
-          c.x += Math.cos(c.angle) * chaseMoveFinal;
-          c.y += Math.sin(c.angle) * chaseMoveFinal;
-          const spinCDistSq = (c.x - MAP_CENTER) ** 2 + (c.y - MAP_CENTER) ** 2;
-          if (spinCDistSq > MAP_RADIUS * MAP_RADIUS) {
-            const spinCDist = Math.sqrt(spinCDistSq);
-            c.x = MAP_CENTER + (c.x - MAP_CENTER) * (MAP_RADIUS / spinCDist);
-            c.y = MAP_CENTER + (c.y - MAP_CENTER) * (MAP_RADIUS / spinCDist);
-            c.angle = reflectAngleOffCircle(c.angle, c.x, c.y);
-          }
-          while (c.angle > Math.PI) c.angle -= 2 * Math.PI;
-          while (c.angle < -Math.PI) c.angle += 2 * Math.PI;
-          }
-        }
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          const ldx = c.x - ladyX;
-          const ldy = c.y - ladyY;
-          const ldistSq = ldx * ldx + ldy * ldy;
-          const ldist = Math.sqrt(ldistSq);
-          if (ldist < ladyRadius + 18 && ldist > 0.001 && !gameOver) {
-            const pushDist = (ladyRadius + 18) - ldist;
-            const nx = ldx / ldist;
-            const ny = ldy / ldist;
-            c.x += nx * pushDist;
-            c.y += ny * pushDist;
-            const inAngle = Math.atan2(-ldy, -ldx);
-            const outAngle = 2 * inAngle - c.angle;
-            c.angle = outAngle;
-            while (c.angle > Math.PI) c.angle -= 2 * Math.PI;
-            while (c.angle < -Math.PI) c.angle += 2 * Math.PI;
-          }
-        }
-        const chaseFuelStopBounceRadius = 70;
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          for (let p = 0; p < refuelPositionsOnMap.length; p++) {
-            const stop = refuelPositionsOnMap[p];
-            const fdx = c.x - stop.x;
-            const fdy = c.y - stop.y;
-            const fdistSq = fdx * fdx + fdy * fdy;
-            const fdist = Math.sqrt(fdistSq);
-            if (fdist < chaseFuelStopBounceRadius && fdist > 0.001) {
-              const pushDist = chaseFuelStopBounceRadius - fdist;
-              const nx = fdx / fdist;
-              const ny = fdy / fdist;
-              c.x += nx * pushDist;
-              c.y += ny * pushDist;
-              const vx = Math.cos(c.angle);
-              const vy = Math.sin(c.angle);
-              const dot = vx * nx + vy * ny;
-              c.angle = Math.atan2(vy - 2 * dot * ny, vx - 2 * dot * nx);
-              while (c.angle > Math.PI) c.angle -= 2 * Math.PI;
-              while (c.angle < -Math.PI) c.angle += 2 * Math.PI;
-            }
-          }
-        }
-        if (chaseCars.length >= 2 && !gameOver) {
-          const c0 = chaseCars[0];
-          const c1 = chaseCars[1];
-          const chDx = c1.x - c0.x;
-          const chDy = c1.y - c0.y;
-          const chDistSq = chDx * chDx + chDy * chDy;
-          const chDist = Math.sqrt(chDistSq);
-          if (chDist < chaseChaseTouchRadius && chDist > 0.001) {
-            if (!wasChaseChaseColliding) {
-              wasChaseChaseColliding = true;
-              playCollisionSound();
-              c0.spinOutUntil = now + spinOutDurMs;
-              c1.spinOutUntil = now + spinOutDurMs;
-            }
-          } else {
-            wasChaseChaseColliding = false;
-          }
-          if (chDist < chaseMinSeparation && chDist > 0.001) {
-            const overlap = chaseMinSeparation - chDist;
-            const nx = chDx / chDist;
-            const ny = chDy / chDist;
-            c0.x -= (overlap * 0.5) * nx;
-            c0.y -= (overlap * 0.5) * ny;
-            c1.x += (overlap * 0.5) * nx;
-            c1.y += (overlap * 0.5) * ny;
-          }
-        }
-        let anyChaseColliding = false;
-        let carChaseCollisionDist = chaseCollisionRadius;
-        if (mainCarImg.naturalHeight > 0 && chaseCarImg.naturalHeight > 0) {
-          const mainHalf = mainCarImg.naturalHeight / 2;
-          const chaseHalf = chaseCarImg.naturalHeight / 2;
-          carChaseCollisionDist = Math.max(10, mainHalf + chaseHalf - 10);
-        }
-        const carChaseCollisionDistSq = carChaseCollisionDist * carChaseCollisionDist;
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          const dx = playerX - c.x;
-          const dy = playerY - c.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < carChaseCollisionDistSq) {
-            anyChaseColliding = true;
-            const dist = Math.sqrt(distSq) || 0.001;
-            const overlap = carChaseCollisionDist - dist;
-            if (overlap > 0) {
-              const nx = dx / dist;
-              const ny = dy / dist;
-              c.x -= nx * overlap;
-              c.y -= ny * overlap;
-            }
-          }
-        }
-        if (anyChaseColliding && !gameOver) {
-          if (!wasChaseColliding) {
-            playCollisionSound();
-            wasChaseColliding = true;
-            if (chaseHitCount < 2) {
-              spinOutUntil = Date.now() + spinOutDurMs;
-              chaseHitCount += 1;
-            } else {
-              gameOver = true;
-              spinOutUntil = Date.now() + spinOutDurMs;
-              chaseHitCount += 1;
-              nameInputTriggered = true;
-              gamePhase = 'nameInput';
-            }
-          }
-        } else if (!anyChaseColliding) {
-          wasChaseColliding = false;
-        }
-        if (gamePhase === 'playing' && !nameInputTriggered && fuel <= 0 && carHasMoved && Math.abs(car.speed) < 0.02) {
-          nameInputTriggered = true;
-          gamePhase = 'nameInput';
-        }
-        const playerLadyDistSq = (playerX - ladyX) ** 2 + (playerY - ladyY) ** 2;
-        if (playerLadyDistSq < ladyRadius * ladyRadius && !gameOver) {
-          if (!wasPlayerLadyColliding) {
-            wasPlayerLadyColliding = true;
-            respawnLady();
-            ladyPickupCount += 1;
-            for (let ci = 0; ci < chaseCars.length; ci++) chaseCars[ci].spinOutUntil = now + ladyChaseSpinDurMs;
-            playWolfWhistle();
-          }
-        } else {
-          wasPlayerLadyColliding = false;
-        }
-      }
-
-      function updateOverlay() {
-        if (gamePhase === 'playing') {
-          gameOverlay.classList.remove('visible');
-          return;
-        }
-        gameOverlay.classList.add('visible');
-        if (gamePhase === 'nameInput') {
-          nameInputPanel.style.display = 'block';
-          scoreDisplayPanel.style.display = 'none';
-          scoreDisplayPanel.classList.remove('flash');
-          if (!nameInputAttached) {
-            nameInputAttached = true;
-            playerNameInput.value = '';
-            playerNameInput.focus();
-            playerNameInput.addEventListener('keydown', function onKey(e) {
-              if (e.key === 'Enter') {
-                const raw = playerNameInput.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3);
-                if (raw.length >= 2) {
-                  playerName = raw;
-                  finalOdo = Math.floor(totalPixelsDriven / 10);
-                  finalScore = finalOdo * (ladyPickupCount + 1);
-                  var scores = loadScores();
-                  scores.push({ name: playerName, score: finalScore });
-                  saveScores(scores);
-                  var rankByIndex = buildRankMap(scores);
-                  var lastIdx = scores.length - 1;
-                  var last = scores[lastIdx];
-                  var othersWithIdx = scores.slice(0, -1).map(function (s, i) { return { name: s.name, score: s.score, origIndex: i }; });
-                  othersWithIdx.sort(function (a, b) { return b.score - a.score || a.origIndex - b.origIndex; });
-                  var others = othersWithIdx.slice(0, 5);
-                  var html = '<div class="score-line">' + formatScoreLine(rankByIndex[lastIdx], last.name, last.score) + '</div>';
-                  html += '<div class="score-separator"></div>';
-                  for (var i = 0; i < others.length; i++) {
-                    html += '<div class="score-line">' + formatScoreLine(rankByIndex[others[i].origIndex], others[i].name, others[i].score) + '</div>';
-                  }
-                  scoreListContainer.innerHTML = html;
-                  gamePhase = 'scoreDisplay';
-                  nameInputPanel.style.display = 'none';
-                  scoreDisplayPanel.style.display = 'block';
-                  scoreDisplayPanel.classList.add('flash');
-                  playerNameInput.removeEventListener('keydown', onKey);
-                  if (!scoreRestartAttached) {
-                    scoreRestartAttached = true;
-                    playAgainBtn.addEventListener('click', doRestart);
-                  }
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setTimeout(function () {
-                    document.addEventListener('keydown', function scoreKey(ev) {
-                      ev.preventDefault();
-                      doRestart();
-                      document.removeEventListener('keydown', scoreKey);
-                    }, { once: true });
-                  }, 0);
-                }
-              }
-            });
-            playerNameInput.addEventListener('input', function () {
-              playerNameInput.value = playerNameInput.value.replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 3);
-            });
-          }
-        }
-        if (gamePhase === 'scoreDisplay') {
-          nameInputPanel.style.display = 'none';
-          scoreDisplayPanel.style.display = 'block';
-          scoreDisplayPanel.classList.add('flash');
-        }
-      }
-
-      function doRestart() {
-        clearTouchInputs();
-        offsetX = -MAP_CENTER;
-        offsetY = -MAP_CENTER;
-        fuel = fuelMax;
-        car.speed = 0;
-        car.angle = 0;
-        chaseHitCount = 0;
-        gameOver = false;
-        spinOutUntil = 0;
-        wasChaseColliding = false;
-        nameInputTriggered = false;
-        gamePhase = 'playing';
-        wasChaseChaseColliding = false;
-        totalPixelsDriven = 0;
-        carHasMoved = false;
-        ladyPickupCount = 0;
-        currentGear = neutralGear;
-        engineRpm = idleRpm;
-        engineTemp = 0;
-        overheatMode = false;
-        overheatTimerSec = 0;
-        playerPositionHistory = [];
-        playerNameInput.value = '';
-        nameInputAttached = false;
-        for (let ci = 0; ci < chaseCars.length; ci++) {
-          const c = chaseCars[ci];
-          c.spawned = false;
-          c.x = 0;
-          c.y = 0;
-          c.angle = 0;
-          c.speed = 0;
-          c.spinOutUntil = 0;
-        }
-        respawnLady();
-        gameOverlay.classList.remove('visible');
-        nameInputPanel.style.display = 'block';
-        scoreDisplayPanel.style.display = 'none';
-        scoreDisplayPanel.classList.remove('flash');
       }
 
       function gameLoop(t) {
         const dt = t - (gameLoop.last || t);
         gameLoop.last = t;
-        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) {
-          updateOverlay();
-          updateEngineSound(engineRpm, 0);
-          drawDesert();
-          drawCar();
-          drawRpmGauge();
-          drawTempGauge();
-          drawSpeedo();
-          drawFuelGauge();
-          drawFuelRateGauge();
-          drawPixelsGauge();
-          drawMinimap();
-          requestAnimationFrame(gameLoop);
-          return;
-        }
         update(dt);
-        updateOverlay();
         updateEngineSound(engineRpm, car.speed);
         drawDesert();
         drawCar();
@@ -1933,128 +941,14 @@
         drawFuelGauge();
         drawFuelRateGauge();
         drawPixelsGauge();
-        drawMinimap();
         requestAnimationFrame(gameLoop);
       }
 
       initEngineSound();
       document.addEventListener('click', tryStartEngineSound, { once: true });
       document.addEventListener('touchstart', tryStartEngineSound, { once: true, passive: true });
-
-      function requestMobileFullscreen() {
-        const root = document.documentElement;
-        if (!root.requestFullscreen) return;
-        if (document.fullscreenElement) return;
-        root.requestFullscreen().catch(function () {});
-      }
-      function isMobilePlayAllowed() {
-        const isLandscape = window.innerWidth > window.innerHeight;
-        const isFullscreen = !!document.fullscreenElement;
-        return isLandscape && isFullscreen;
-      }
-      function refreshMobilePlayLock() {
-        if (layoutMode !== 'mobile') {
-          mobileLockOverlay.classList.remove('visible');
-          return;
-        }
-        const allowed = isMobilePlayAllowed();
-        mobileLockOverlay.classList.toggle('visible', !allowed);
-        if (!allowed) clearTouchInputs();
-      }
-      function ensureMobileLandscapeFullscreen() {
-        if (layoutMode !== 'mobile') return;
-        if (window.innerWidth <= window.innerHeight) return;
-        if (document.fullscreenElement) return;
-        requestMobileFullscreen();
-        refreshMobilePlayLock();
-      }
-      function applyLayoutMode(mode) {
-        if (layoutMode) return;
-        layoutMode = mode;
-        if (mode === 'mobile') {
-          document.body.classList.add('layout-mobile');
-          requestMobileFullscreen();
-          ensureMobileLandscapeFullscreen();
-          refreshMobilePlayLock();
-        }
-        layoutChooser.classList.add('hidden');
-      }
-      layoutPcBtn.addEventListener('click', function () { applyLayoutMode('pc'); });
-      layoutMobileBtn.addEventListener('click', function () { applyLayoutMode('mobile'); });
-      mobileContinueBtn.addEventListener('click', function () {
-        requestMobileFullscreen();
-        ensureMobileLandscapeFullscreen();
-        refreshMobilePlayLock();
-      });
-      window.addEventListener('resize', ensureMobileLandscapeFullscreen);
-      window.addEventListener('orientationchange', ensureMobileLandscapeFullscreen);
-      document.addEventListener('fullscreenchange', function () {
-        ensureMobileLandscapeFullscreen();
-        refreshMobilePlayLock();
-      });
-      document.addEventListener('visibilitychange', function () {
-        if (!document.hidden) {
-          ensureMobileLandscapeFullscreen();
-          refreshMobilePlayLock();
-        }
-      });
-      document.addEventListener('pointerdown', function () {
-        ensureMobileLandscapeFullscreen();
-        refreshMobilePlayLock();
-      });
-
-      function setTouchKey(keyName, isPressed, el) {
-        if (layoutMode !== 'mobile') return;
-        if (!isMobilePlayAllowed()) return;
-        if (gamePhase !== 'playing' && isPressed) return;
-        keys[keyName] = isPressed;
-        if (!isPressed) {
-          if (keyName === 'up') needReleaseBeforeForward = false;
-          if (keyName === 'down') needReleaseBeforeReverse = false;
-        }
-        if (el) el.classList.toggle('active', isPressed);
-      }
-      function clearTouchInputs() {
-        keys.left = false;
-        keys.right = false;
-        keys.up = false;
-        keys.down = false;
-        keys.brake = false;
-        touchLeftBtn.classList.remove('active');
-        touchRightBtn.classList.remove('active');
-        touchUpBtn.classList.remove('active');
-        touchDownBtn.classList.remove('active');
-      }
-      function bindTouchButton(el, keyName) {
-        if (!el) return;
-        const start = function (e) {
-          e.preventDefault();
-          tryStartEngineSound();
-          setTouchKey(keyName, true, el);
-        };
-        const end = function (e) {
-          e.preventDefault();
-          setTouchKey(keyName, false, el);
-        };
-        el.addEventListener('pointerdown', start);
-        el.addEventListener('pointerup', end);
-        el.addEventListener('pointercancel', end);
-        el.addEventListener('pointerleave', end);
-      }
-      bindTouchButton(touchLeftBtn, 'left');
-      bindTouchButton(touchRightBtn, 'right');
-      bindTouchButton(touchUpBtn, 'up');
-      bindTouchButton(touchDownBtn, 'down');
-      window.addEventListener('blur', clearTouchInputs);
-      document.addEventListener('visibilitychange', function () {
-        if (document.hidden) clearTouchInputs();
-      });
-
       document.addEventListener('keydown', (e) => {
         tryStartEngineSound();
-        if (!layoutMode) return;
-        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) return;
-        if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = true; e.preventDefault(); break;
           case 'ArrowDown': case 's': case 'S': keys.down = true; e.preventDefault(); break;
@@ -2064,9 +958,6 @@
         }
       });
       document.addEventListener('keyup', (e) => {
-        if (!layoutMode) return;
-        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) return;
-        if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = false; needReleaseBeforeForward = false; break;
           case 'ArrowDown': case 's': case 'S': keys.down = false; needReleaseBeforeReverse = false; break;
