@@ -164,6 +164,19 @@
       justify-content: center;
     }
     #layoutChooser.hidden { display: none; }
+    #mobileLockOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1900;
+      background: rgba(0, 0, 0, 0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      text-align: center;
+    }
+    #mobileLockOverlay.visible { display: flex; }
+    #mobileLockOverlay .layout-panel p { margin-bottom: 0.75rem; }
     .layout-panel {
       background: #1a1510;
       border: 3px solid #8b7355;
@@ -201,20 +214,41 @@
 
     body.layout-mobile {
       justify-content: flex-start;
-      padding: 0.5rem 0.25rem;
+      padding: 0.25rem 0;
       overflow: hidden;
     }
-    body.layout-mobile h1 { font-size: 1rem; margin-bottom: 0.3rem; }
-    body.layout-mobile .controls { font-size: 0.72rem; margin-bottom: 0.4rem; }
+    body.layout-mobile h1 { display: none; }
+    body.layout-mobile .controls { display: none; }
     body.layout-mobile .touch-column { display: flex; }
-    body.layout-mobile .mobile-layout { width: 100vw; max-width: 100vw; }
+    body.layout-mobile .mobile-layout {
+      width: 100vw;
+      max-width: 100vw;
+      justify-content: space-between;
+      gap: 0;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+    }
+    body.layout-mobile .touch-left {
+      margin-left: 0;
+      transform: translateX(-4px);
+    }
+    body.layout-mobile .touch-right {
+      margin-right: 0;
+      transform: translateX(4px);
+    }
+    body.layout-mobile .game-wrap {
+      width: min(840px, calc(100vw - 152px));
+      max-height: calc(100vh - 8px);
+      flex: 0 1 auto;
+    }
     body.layout-mobile #gaugeCanvas,
     body.layout-mobile #gameCanvas {
       height: auto;
-      max-height: calc(100vh - 96px);
+      max-height: calc(100vh - 8px);
     }
-    body.layout-mobile #gaugeCanvas { width: clamp(44px, 12vw, 110px); }
-    body.layout-mobile #gameCanvas { width: clamp(220px, 62vw, 700px); }
+    body.layout-mobile #gaugeCanvas { width: 16.6667%; }
+    body.layout-mobile #gameCanvas { width: 83.3333%; }
     body.layout-mobile .overlay-panel { padding: 1rem; }
     body.layout-mobile #scoreDisplayPanel { font-size: 14px; line-height: 1.6; }
   </style>
@@ -228,6 +262,13 @@
         <button type="button" class="layout-btn" id="layoutPcBtn">PC</button>
         <button type="button" class="layout-btn" id="layoutMobileBtn">Mobile</button>
       </div>
+    </div>
+  </div>
+  <div id="mobileLockOverlay">
+    <div class="layout-panel">
+      <h2>Mobile Play Locked</h2>
+      <p>Rotate to landscape and use fullscreen to play.</p>
+      <button type="button" class="layout-btn" id="mobileContinueBtn">Go Fullscreen</button>
     </div>
   </div>
   <h1>Desert Drive</h1>
@@ -273,6 +314,8 @@
       const layoutChooser = document.getElementById('layoutChooser');
       const layoutPcBtn = document.getElementById('layoutPcBtn');
       const layoutMobileBtn = document.getElementById('layoutMobileBtn');
+      const mobileLockOverlay = document.getElementById('mobileLockOverlay');
+      const mobileContinueBtn = document.getElementById('mobileContinueBtn');
       const touchLeftBtn = document.getElementById('touchLeft');
       const touchRightBtn = document.getElementById('touchRight');
       const touchUpBtn = document.getElementById('touchUp');
@@ -1864,6 +1907,21 @@
       function gameLoop(t) {
         const dt = t - (gameLoop.last || t);
         gameLoop.last = t;
+        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) {
+          updateOverlay();
+          updateEngineSound(engineRpm, 0);
+          drawDesert();
+          drawCar();
+          drawRpmGauge();
+          drawTempGauge();
+          drawSpeedo();
+          drawFuelGauge();
+          drawFuelRateGauge();
+          drawPixelsGauge();
+          drawMinimap();
+          requestAnimationFrame(gameLoop);
+          return;
+        }
         update(dt);
         updateOverlay();
         updateEngineSound(engineRpm, car.speed);
@@ -1889,20 +1947,65 @@
         if (document.fullscreenElement) return;
         root.requestFullscreen().catch(function () {});
       }
+      function isMobilePlayAllowed() {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isFullscreen = !!document.fullscreenElement;
+        return isLandscape && isFullscreen;
+      }
+      function refreshMobilePlayLock() {
+        if (layoutMode !== 'mobile') {
+          mobileLockOverlay.classList.remove('visible');
+          return;
+        }
+        const allowed = isMobilePlayAllowed();
+        mobileLockOverlay.classList.toggle('visible', !allowed);
+        if (!allowed) clearTouchInputs();
+      }
+      function ensureMobileLandscapeFullscreen() {
+        if (layoutMode !== 'mobile') return;
+        if (window.innerWidth <= window.innerHeight) return;
+        if (document.fullscreenElement) return;
+        requestMobileFullscreen();
+        refreshMobilePlayLock();
+      }
       function applyLayoutMode(mode) {
         if (layoutMode) return;
         layoutMode = mode;
         if (mode === 'mobile') {
           document.body.classList.add('layout-mobile');
           requestMobileFullscreen();
+          ensureMobileLandscapeFullscreen();
+          refreshMobilePlayLock();
         }
         layoutChooser.classList.add('hidden');
       }
       layoutPcBtn.addEventListener('click', function () { applyLayoutMode('pc'); });
       layoutMobileBtn.addEventListener('click', function () { applyLayoutMode('mobile'); });
+      mobileContinueBtn.addEventListener('click', function () {
+        requestMobileFullscreen();
+        ensureMobileLandscapeFullscreen();
+        refreshMobilePlayLock();
+      });
+      window.addEventListener('resize', ensureMobileLandscapeFullscreen);
+      window.addEventListener('orientationchange', ensureMobileLandscapeFullscreen);
+      document.addEventListener('fullscreenchange', function () {
+        ensureMobileLandscapeFullscreen();
+        refreshMobilePlayLock();
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+          ensureMobileLandscapeFullscreen();
+          refreshMobilePlayLock();
+        }
+      });
+      document.addEventListener('pointerdown', function () {
+        ensureMobileLandscapeFullscreen();
+        refreshMobilePlayLock();
+      });
 
       function setTouchKey(keyName, isPressed, el) {
         if (layoutMode !== 'mobile') return;
+        if (!isMobilePlayAllowed()) return;
         if (gamePhase !== 'playing' && isPressed) return;
         keys[keyName] = isPressed;
         if (!isPressed) {
@@ -1941,7 +2044,7 @@
       bindTouchButton(touchLeftBtn, 'left');
       bindTouchButton(touchRightBtn, 'right');
       bindTouchButton(touchUpBtn, 'up');
-      bindTouchButton(touchDownBtn, 'brake');
+      bindTouchButton(touchDownBtn, 'down');
       window.addEventListener('blur', clearTouchInputs);
       document.addEventListener('visibilitychange', function () {
         if (document.hidden) clearTouchInputs();
@@ -1950,6 +2053,7 @@
       document.addEventListener('keydown', (e) => {
         tryStartEngineSound();
         if (!layoutMode) return;
+        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) return;
         if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = true; e.preventDefault(); break;
@@ -1961,6 +2065,7 @@
       });
       document.addEventListener('keyup', (e) => {
         if (!layoutMode) return;
+        if (layoutMode === 'mobile' && !isMobilePlayAllowed()) return;
         if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = false; needReleaseBeforeForward = false; break;
