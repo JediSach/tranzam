@@ -154,28 +154,82 @@
     }
     #playAgainBtn:hover { background: #3d6020; }
 
-    @media (hover: none) and (pointer: coarse) {
-      body {
-        justify-content: flex-start;
-        padding: 0.5rem 0.25rem;
-        overflow: hidden;
-      }
-      h1 { font-size: 1rem; margin-bottom: 0.3rem; }
-      .controls { font-size: 0.72rem; margin-bottom: 0.4rem; }
-      .touch-column { display: flex; }
-      .mobile-layout { width: 100vw; max-width: 100vw; }
-      #gaugeCanvas, #gameCanvas {
-        height: auto;
-        max-height: calc(100vh - 96px);
-      }
-      #gaugeCanvas { width: clamp(44px, 12vw, 110px); }
-      #gameCanvas { width: clamp(220px, 62vw, 700px); }
-      .overlay-panel { padding: 1rem; }
-      #scoreDisplayPanel { font-size: 14px; line-height: 1.6; }
+    #layoutChooser {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.86);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    #layoutChooser.hidden { display: none; }
+    .layout-panel {
+      background: #1a1510;
+      border: 3px solid #8b7355;
+      border-radius: 10px;
+      padding: 1.5rem;
+      min-width: min(92vw, 360px);
+      text-align: center;
+    }
+    .layout-panel h2 {
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+    }
+    .layout-panel p {
+      font-size: 0.88rem;
+      opacity: 0.85;
+      margin-bottom: 1rem;
+    }
+    .layout-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .layout-btn {
+      min-width: 110px;
+      padding: 0.65rem 1rem;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      border: 2px solid #8b7355;
+      background: #2a2518;
+      color: #e8dcc8;
+      cursor: pointer;
+    }
+    .layout-btn:hover { background: #3a3321; }
+
+    body.layout-mobile {
+      justify-content: flex-start;
+      padding: 0.5rem 0.25rem;
+      overflow: hidden;
+    }
+    body.layout-mobile h1 { font-size: 1rem; margin-bottom: 0.3rem; }
+    body.layout-mobile .controls { font-size: 0.72rem; margin-bottom: 0.4rem; }
+    body.layout-mobile .touch-column { display: flex; }
+    body.layout-mobile .mobile-layout { width: 100vw; max-width: 100vw; }
+    body.layout-mobile #gaugeCanvas,
+    body.layout-mobile #gameCanvas {
+      height: auto;
+      max-height: calc(100vh - 96px);
+    }
+    body.layout-mobile #gaugeCanvas { width: clamp(44px, 12vw, 110px); }
+    body.layout-mobile #gameCanvas { width: clamp(220px, 62vw, 700px); }
+    body.layout-mobile .overlay-panel { padding: 1rem; }
+    body.layout-mobile #scoreDisplayPanel { font-size: 14px; line-height: 1.6; }
   </style>
 </head>
 <body>
+  <div id="layoutChooser">
+    <div class="layout-panel">
+      <h2>Choose Layout</h2>
+      <p>Select your control layout before starting the game.</p>
+      <div class="layout-actions">
+        <button type="button" class="layout-btn" id="layoutPcBtn">PC</button>
+        <button type="button" class="layout-btn" id="layoutMobileBtn">Mobile</button>
+      </div>
+    </div>
+  </div>
   <h1>Desert Drive</h1>
   <p class="controls">Arrow keys or WASD: steer · Up/W: forward, Down/S: reverse (stop first) · Space: brake to stop</p>
   <div class="mobile-layout">
@@ -216,6 +270,9 @@
       const playerNameInput = document.getElementById('playerNameInput');
       const scoreListContainer = document.getElementById('scoreListContainer');
       const playAgainBtn = document.getElementById('playAgainBtn');
+      const layoutChooser = document.getElementById('layoutChooser');
+      const layoutPcBtn = document.getElementById('layoutPcBtn');
+      const layoutMobileBtn = document.getElementById('layoutMobileBtn');
       const touchLeftBtn = document.getElementById('touchLeft');
       const touchRightBtn = document.getElementById('touchRight');
       const touchUpBtn = document.getElementById('touchUp');
@@ -244,6 +301,7 @@
       let nameInputAttached = false;
       let scoreRestartAttached = false;
       let wallStripePattern = null;
+      let layoutMode = null; // 'pc' | 'mobile'
       const GAME_SIZE = 700;
 
       const mainCarImg = new Image();
@@ -1186,6 +1244,7 @@
       }
 
       function update(dt) {
+        if (!layoutMode) return;
         const rate = Math.min(dt / 16, 2);
 
         const speedRatio = Math.abs(car.speed) / car.maxSpeed;
@@ -1824,7 +1883,26 @@
       document.addEventListener('click', tryStartEngineSound, { once: true });
       document.addEventListener('touchstart', tryStartEngineSound, { once: true, passive: true });
 
+      function requestMobileFullscreen() {
+        const root = document.documentElement;
+        if (!root.requestFullscreen) return;
+        if (document.fullscreenElement) return;
+        root.requestFullscreen().catch(function () {});
+      }
+      function applyLayoutMode(mode) {
+        if (layoutMode) return;
+        layoutMode = mode;
+        if (mode === 'mobile') {
+          document.body.classList.add('layout-mobile');
+          requestMobileFullscreen();
+        }
+        layoutChooser.classList.add('hidden');
+      }
+      layoutPcBtn.addEventListener('click', function () { applyLayoutMode('pc'); });
+      layoutMobileBtn.addEventListener('click', function () { applyLayoutMode('mobile'); });
+
       function setTouchKey(keyName, isPressed, el) {
+        if (layoutMode !== 'mobile') return;
         if (gamePhase !== 'playing' && isPressed) return;
         keys[keyName] = isPressed;
         if (!isPressed) {
@@ -1871,6 +1949,7 @@
 
       document.addEventListener('keydown', (e) => {
         tryStartEngineSound();
+        if (!layoutMode) return;
         if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = true; e.preventDefault(); break;
@@ -1881,6 +1960,7 @@
         }
       });
       document.addEventListener('keyup', (e) => {
+        if (!layoutMode) return;
         if (gamePhase !== 'playing') return;
         switch (e.key) {
           case 'ArrowUp': case 'w': case 'W': keys.up = false; needReleaseBeforeForward = false; break;
